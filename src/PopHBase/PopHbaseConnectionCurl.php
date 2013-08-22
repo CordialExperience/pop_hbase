@@ -11,6 +11,8 @@
  *
  * @author		David Worms info(at)adaltas.com
  */
+namespace PopHbase;
+
 class PopHbaseConnectionCurl implements PopHbaseConnection{
 
 	public $options;

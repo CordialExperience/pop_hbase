@@ -11,7 +11,10 @@
  *
  * @author		David Worms info(at)adaltas.com
  */
-class PopHbase{
+
+namespace PopHbase;
+
+class PopHbase {
 
 	public $options;
 	
