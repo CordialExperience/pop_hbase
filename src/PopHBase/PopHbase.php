@@ -20,7 +20,7 @@ class PopHbase {
 	
 	public function __construct($options=array()){
 		if(empty($options['connection'])){
-			$options['connection'] = 'PopHbaseConnectionCurl';
+			$options['connection'] = '\PopHbase\PopHbaseConnectionCurl';
 		}else if (class_exists('PopHbaseConnection'.ucfirst($options['connection']))){
 			$options['connection'] = 'PopHbaseConnection'.ucfirst($options['connection']);
 		}else if (!class_exists($options['connection'])){
@@ -30,7 +30,7 @@ class PopHbase {
 	}
 	
 	/**
-	 * Detruct current instance, its potential circular references and close the HBase connection if opened.
+	 * Destruct current instance, its potential circular references and close the HBase connection if opened.
 	 */
 	public function __destruct(){
 		

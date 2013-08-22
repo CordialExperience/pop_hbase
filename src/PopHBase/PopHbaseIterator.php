@@ -13,7 +13,7 @@
  */
 namespace PopHbase;
 
-abstract class PopHbaseIterator implements Countable, Iterator{
+abstract class PopHbaseIterator implements \Countable, \Iterator{
 
 	
 	//public $data = array();
