@@ -97,7 +97,34 @@ class PopHbaseRow{
 		}
 		return base64_decode($body['Row'][0]['Cell'][0]['$']);
 	}
-	
+
+    public function multiGet($column, $count = 100)
+    {
+        $body = $this->hbase->request->get($this->table .'/'.$this->key.'/'.$column . '/?v=' . $count)->body;
+        if(is_null($body)){
+            return null;
+        }
+        return $this->parseMultiRowBody($body);
+    }
+
+    private function parseMultiRowBody($body)
+    {
+        $bodyArray = json_decode($body, true);
+
+        $result = array();
+
+        if (isset($bodyArray['Row'][0]['Cell']) && $bodyArray['Row'][0]['Cell'] > 0) {
+            foreach ($bodyArray['Row'][0]['Cell'] as $key => $value) {
+                $result[] = array(
+                    'timestamp' => $value['timestamp'],
+                    'data'      => base64_decode($value['$'])
+                );
+            }
+        }
+
+        return $result;
+    }
+
 	/**
 	 * Create or update a column row.
 	 * 

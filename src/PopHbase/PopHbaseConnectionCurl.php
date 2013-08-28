@@ -66,7 +66,7 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
 	 * 
 	 * @return PopHbaseResponse Response object parsing the HTTP HBase response.
 	 */
-	public function execute($method,$url,$data=null,$raw=false) {
+	public function execute($method, $url, $data = null, $raw = true) {
 		$url = (substr($url, 0, 1) == '/' ? $url : '/'.$url);
 		if(is_array($data)){
 			$data = json_encode($data);
@@ -126,7 +126,8 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
 				fclose($file); 
 				break;
 		}
-		return new PopHbaseResponse($headers,$body,$raw);
+
+		return new PopHbaseResponse($headers, $body, $raw);
 	}
 
 }
