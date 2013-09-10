@@ -151,4 +151,30 @@ class PopHbaseRow{
 		return $this;
 	}
 
+    /**
+     * Create or update a column row.
+     *
+     * Usage:
+     *
+     *    $hbase
+     *        ->table('my_table')
+     *            ->row('my_row')
+     *                ->putWithTimestamp('my_column_family:my_column','my_value','my_timestamp');
+     *
+     * Note, in HBase, creation and modification of a column value is the same concept.
+     */
+    public function putWithTimestamp($column,$value,$timestamp){
+        $value = array(
+            'Row' => array(array(
+                'key' => base64_encode($this->key),
+                'Cell' => array(array(
+                    'column' => base64_encode($column),
+                    '$' => base64_encode($value)
+                ))
+            ))
+        );
+        $this->hbase->request->put($this->table .'/'.$this->key.'/'.$column.'/'.$timestamp,$value);
+        return $this;
+    }
+
 }
