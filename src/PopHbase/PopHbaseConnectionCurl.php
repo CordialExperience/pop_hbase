@@ -68,18 +68,21 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
 	 */
 	public function execute($method, $url, $data = null, $raw = true, $timestamp = null) {
 		$url = (substr($url, 0, 1) == '/' ? $url : '/'.$url);
-		if(is_array($data)){
-			$data = json_encode($data);
-		}
-
-        $curl_hhtp_headers =  array(
-            'Content-Type: application/json',
-            'Accept: application/json',
-            'Connection: ' . ( $this->options['alive'] ? 'Keep-Alive' : 'Close' ),
-        );
 
         if (isset($timestamp)) {
-            array_push($curl_hhtp_headers, 'X-Timestamp: ' . $timestamp);
+            $curl_hhtp_headers =  array(
+                'Connection: ' . ( $this->options['alive'] ? 'Keep-Alive' : 'Close' ),
+                'X-Timestamp: ' . $timestamp
+            );
+        } else {
+            if(is_array($data)){
+                $data = json_encode($data);
+            }
+            $curl_hhtp_headers =  array(
+                'Content-Type: application/json',
+                'Accept: application/json',
+                'Connection: ' . ( $this->options['alive'] ? 'Keep-Alive' : 'Close' )
+            );
         }
 
 		$curl = curl_init();
@@ -97,11 +100,11 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
 				break;
 			case 'PUT':
 				curl_setopt($curl, CURLOPT_PUT, 1);
-				$file = tmpfile();
-				fwrite($file, $data);
-				fseek($file, 0);
-				curl_setopt($curl, CURLOPT_INFILE, $file);
-				curl_setopt($curl, CURLOPT_INFILESIZE, strlen($data));
+                $file = tmpfile();
+                fwrite($file, $data);
+                fseek($file, 0);
+                curl_setopt($curl, CURLOPT_INFILE, $file);
+                curl_setopt($curl, CURLOPT_INFILESIZE, strlen($data));
 				break;
 			case 'POST':
 				curl_setopt($curl, CURLOPT_POST, 1);

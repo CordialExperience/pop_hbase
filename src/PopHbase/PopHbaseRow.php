@@ -138,15 +138,17 @@ class PopHbaseRow{
 	 * Note, in HBase, creation and modification of a column value is the same concept.
 	 */
 	public function put($column,$value,$timestamp=null){
-		$value = array(
-			'Row' => array(array(
-				'key' => base64_encode($this->key),
-				'Cell' => array(array(
-					'column' => base64_encode($column),
-					'$' => base64_encode($value)
-				))
-			))
-		);
+        if (!isset($timestamp)) {
+            $value = array(
+                'Row' => array(array(
+                    'key' => base64_encode($this->key),
+                    'Cell' => array(array(
+                        'column' => base64_encode($column),
+                        '$' => base64_encode($value)
+                    ))
+                ))
+            );
+        }
 		$this->hbase->request->put($this->table .'/'.$this->key.'/'.$column,$value,$timestamp);
 		return $this;
 	}
