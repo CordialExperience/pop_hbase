@@ -79,7 +79,7 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
         );
 
         if (isset($timestamp)) {
-            $curl_hhtp_headers['X-Timestamp'] = $timestamp;
+            array_push($curl_hhtp_headers, 'X-Timestamp: ' . $timestamp);
         }
 
 		$curl = curl_init();
