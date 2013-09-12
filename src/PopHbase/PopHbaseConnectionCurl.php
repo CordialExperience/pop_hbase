@@ -66,11 +66,22 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
 	 * 
 	 * @return PopHbaseResponse Response object parsing the HTTP HBase response.
 	 */
-	public function execute($method, $url, $data = null, $raw = true) {
+	public function execute($method, $url, $data = null, $raw = true, $timestamp = null) {
 		$url = (substr($url, 0, 1) == '/' ? $url : '/'.$url);
 		if(is_array($data)){
 			$data = json_encode($data);
 		}
+
+        $curl_hhtp_headers =  array(
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'Connection: ' . ( $this->options['alive'] ? 'Keep-Alive' : 'Close' ),
+        );
+
+        if (isset($timestamp)) {
+            $curl_hhtp_headers['X-Timestamp'] = $timestamp;
+        }
+
 		$curl = curl_init();
 		curl_setopt($curl, CURLOPT_URL, 'http://'.$this->options['host'].':'.$this->options['port'].$url);
 		curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
@@ -78,11 +89,7 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($curl, CURLOPT_MAXREDIRS, 3);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-			'Content-Type: application/json',
-			'Accept: application/json',
-			'Connection: ' . ( $this->options['alive'] ? 'Keep-Alive' : 'Close' ),
-		));
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $curl_hhtp_headers);
 		curl_setopt($curl, CURLOPT_VERBOSE, !empty($this->options['verbose'])); 
 		switch(strtoupper($method)){
 			case 'DELETE':
