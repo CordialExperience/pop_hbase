@@ -90,11 +90,24 @@ class PopHbaseRow{
 	 *            ->row('my_row')
 	 *                ->get('my_column_family:my_column');
 	 */
-	public function get($column){
-		$body = $this->hbase->request->get($this->table .'/'.$this->key.'/'.$column)->body;
+	public function get($column, $timestamp=null){
+        $getUrl = $this->table .'/'.$this->key.'/'.$column;
+        $getUrl .= (isset($timestamp)) ? '/'.($timestamp+1).','.($timestamp+2) : '';
+
+		$body = $this->hbase->request->get($getUrl)->body;
+
 		if(is_null($body)){
 			return null;
 		}
+
+        if (isset($timestamp)) {
+            $result_arr = $this->parseMultiRowBody($body);
+            if (empty($result_arr)) {
+                return null;
+            }
+            return $result_arr[0]['data'];
+        }
+
 		return base64_decode($body['Row'][0]['Cell'][0]['$']);
 	}
 

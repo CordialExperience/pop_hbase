@@ -69,15 +69,20 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
 	public function execute($method, $url, $data = null, $raw = true, $timestamp = null) {
 		$url = (substr($url, 0, 1) == '/' ? $url : '/'.$url);
 
-        if (isset($timestamp)) {
+        if(is_array($data)){
+            $data = json_encode($data);
+        }
+
+        $method = strtoupper($method);
+
+        if (isset($timestamp) && $method == 'PUT') {
             $curl_hhtp_headers =  array(
+                'Content-Type: application/octet-stream',
+                'Accept: application/octet-stream',
                 'Connection: ' . ( $this->options['alive'] ? 'Keep-Alive' : 'Close' ),
                 'X-Timestamp: ' . $timestamp
             );
         } else {
-            if(is_array($data)){
-                $data = json_encode($data);
-            }
             $curl_hhtp_headers =  array(
                 'Content-Type: application/json',
                 'Accept: application/json',
@@ -94,7 +99,7 @@ class PopHbaseConnectionCurl implements PopHbaseConnection{
 		curl_setopt($curl, CURLOPT_MAXREDIRS, 3);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $curl_hhtp_headers);
 		curl_setopt($curl, CURLOPT_VERBOSE, !empty($this->options['verbose'])); 
-		switch(strtoupper($method)){
+		switch($method){
 			case 'DELETE':
 				curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
 				break;

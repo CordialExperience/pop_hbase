@@ -40,7 +40,7 @@ class PopHbaseRequest{
 	 * 
 	 * @return PopHbaseResponse Response object
 	 */
-	public function get($command){
+	public function get($command, $timestamp=null){
 		return $this->hbase->connection->execute('GET',$command);
 	}
 	
