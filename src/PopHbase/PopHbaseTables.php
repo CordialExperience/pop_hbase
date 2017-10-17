@@ -103,11 +103,11 @@ class PopHbaseTables extends PopHbaseIterator{
 					$schema[$k] = $v;
 				}
 				if(!isset($schema['name'])){
-					throw new \InvalidArgumentException('Table schema definition not correctly defined "'.PurLang::toString($table).'"');
+					throw new \InvalidArgumentException('Table schema definition not correctly defined "'.$table.'"');
 				}
 				break;
 			default:
-				throw new \InvalidArgumentException('Table schema definition not correctly defined: "'.PurLang::toString($table).'"');
+				throw new \InvalidArgumentException('Table schema definition not correctly defined: "'.$table.'"');
 		}
 		if(count($args)===0){
 			throw new \InvalidArgumentException('Missing at least one column schema definition');
@@ -136,12 +136,12 @@ class PopHbaseTables extends PopHbaseIterator{
 						$columnSchema[$k] = $v;
 					}
 					if(!isset($columnSchema['name'])){
-						throw new \InvalidArgumentException('Column schema definition not correctly defined "'.PurLang::toString($table).'"');
+						throw new \InvalidArgumentException('Column schema definition not correctly defined "'.$table.'"');
 					}
 					$schema['ColumnSchema'][] = $columnSchema;
 					break;
 				default:
-				throw new \InvalidArgumentException('Column schema definition not correctly defined: "'.PurLang::toString($table).'"');
+				throw new \InvalidArgumentException('Column schema definition not correctly defined: "'.$table.'"');
 			}
 		}
 		$this->hbase->request->put($schema['name'].'/schema',$schema);
